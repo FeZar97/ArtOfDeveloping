@@ -47,6 +47,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WhiteBelt212", "WhiteBelt\W
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WhiteBelt213", "WhiteBelt\WhiteBelt213\WhiteBelt213.vcxproj", "{E681215B-AFD9-40C6-9970-9DFAA873F45D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WhiteBelt214", "WhiteBelt\WhiteBelt214\WhiteBelt214.vcxproj", "{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -231,6 +233,14 @@ Global
 		{E681215B-AFD9-40C6-9970-9DFAA873F45D}.Release|x64.Build.0 = Release|x64
 		{E681215B-AFD9-40C6-9970-9DFAA873F45D}.Release|x86.ActiveCfg = Release|Win32
 		{E681215B-AFD9-40C6-9970-9DFAA873F45D}.Release|x86.Build.0 = Release|Win32
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Debug|x64.ActiveCfg = Debug|x64
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Debug|x64.Build.0 = Debug|x64
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Debug|x86.ActiveCfg = Debug|Win32
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Debug|x86.Build.0 = Debug|Win32
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Release|x64.ActiveCfg = Release|x64
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Release|x64.Build.0 = Release|x64
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Release|x86.ActiveCfg = Release|Win32
+		{5FFBECAB-5127-402B-B1EB-5DCC6655DE73}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
