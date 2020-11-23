@@ -43,15 +43,19 @@ public:
 		return false;
 	}
 
-	friend stringstream& operator>>(stringstream &ss, Date &date) {
-		string error_message = "", temp;
+	friend istream& operator>>(istream &is, Date &date) {
+		string error_message = "", inputString;
 		int _year, _month, _day;
 		char _delim1, _delim2;
+		stringstream ss;
+
+		is >> inputString;
+		ss << inputString;
 
 		ss >> _year >> _delim1 >> _month >> _delim2 >> _day;
-		if (_delim1 != '-' || _delim2 != '-' || !ss.good() || (ss.peek() != ' ' && ss.peek() != '\n')) {
+		if (_delim1 != '-' || _delim2 != '-' || (ss.peek() != EOF && ss.peek() != '\n')) {
 			// error_message = "Wrong date format: " + to_string(_year) + _delim1 + to_string(_month) + _delim2 + to_string(_day);
-			error_message = "Wrong date format: " + ss.str();
+			error_message = "Wrong date format: " + inputString;
 		}
 		else {
 			if (_month > 0 && _month < 13) {
@@ -71,7 +75,7 @@ public:
 		if (!error_message.empty()) {
 			throw runtime_error(error_message);
 		}
-		return ss;
+		return is;
 	}
 };
 
@@ -183,21 +187,6 @@ int main() {
 		}
 	}
 
-	/*
-	stringstream ss;
-	ss << "Add 1-2-3 event1";
-	cout << "ss state: " << ss.str() << endl;
-
-
-	string command;
-	ss >> command;
-
-	char nextSym = ss.peek();
-
-	cout << "nextSym: " << nextSym << endl;
-	cout << "ss state: " << ss.str() << endl;
-
-	*/
 	system("pause");
 
 	return 0;
