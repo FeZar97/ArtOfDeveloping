@@ -21,9 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9f9c2570-b143-4650-bb85-a9ae80c99115}</ProjectGuid>
-    <RootNamespace>YellowBelt11</RootNamespace>
+    <ProjectGuid>{2e5484c4-5978-4d8f-914e-02a064c77dd5}</ProjectGuid>
+    <RootNamespace>YellowBelt</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>YellowBelt15</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
