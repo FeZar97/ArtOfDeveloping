@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YellowBelt17", "YellowBelt1
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YellowBelt21", "YellowBelt21\YellowBelt21.vcxproj", "{AF33DD02-2250-4295-BF34-E02D77C47D6F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YellowBelt22", "YellowBelt22\YellowBelt22.vcxproj", "{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{AF33DD02-2250-4295-BF34-E02D77C47D6F}.Release|x64.Build.0 = Release|x64
 		{AF33DD02-2250-4295-BF34-E02D77C47D6F}.Release|x86.ActiveCfg = Release|Win32
 		{AF33DD02-2250-4295-BF34-E02D77C47D6F}.Release|x86.Build.0 = Release|Win32
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Debug|x64.ActiveCfg = Debug|x64
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Debug|x64.Build.0 = Debug|x64
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Debug|x86.ActiveCfg = Debug|Win32
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Debug|x86.Build.0 = Debug|Win32
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Release|x64.ActiveCfg = Release|x64
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Release|x64.Build.0 = Release|x64
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Release|x86.ActiveCfg = Release|Win32
+		{91EA131F-2C55-4A6C-BEE5-EB2967F808BE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
