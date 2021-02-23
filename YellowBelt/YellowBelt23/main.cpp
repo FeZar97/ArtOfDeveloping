@@ -95,51 +95,84 @@ private:
     int fail_count = 0;
 };
 
-// int GetDistinctRealRootCount(double a, double b, double c);
+/*
+class Person {
+public:
+    void ChangeFirstName(int year, const string& first_name) {
+    }
+    void ChangeLastName(int year, const string& last_name) {
+    }
+    string GetFullName(int year) {
+    }
+};
+*/
 
-void OnlyThirdCoef() {
-    AssertEqual(GetDistinctRealRootCount(0, 0, 1),  0, "OnlyThirdCoef1");
-    AssertEqual(GetDistinctRealRootCount(0, 0, -1), 0, "OnlyThirdCoef2");
+void Test1() {
+    Person person;
+    string answer1, answer2 = "Incognito Polina with unknown last name Polina Sergeeva ";
+
+    person.ChangeFirstName(1965, "Polina");
+    person.ChangeLastName(1967, "Sergeeva");
+
+    for (int year : {1900, 1965, 1990}) {
+        answer1 += person.GetFullName(year) + " ";
+    }
+
+    AssertEqual(answer1, answer2, "Test1");
 }
 
-void LinearEquation() {
-    AssertEqual(GetDistinctRealRootCount(0, 1, 1), 1, "LinearEquation");
+void Test2() {
+    Person person;
+    string answer1, answer2 = "Incognito";
+
+    answer1 = person.GetFullName(1);
+
+    AssertEqual(answer1, answer2, "Test2");
 }
 
-void NotIntersectedParabola() {
-    AssertEqual(GetDistinctRealRootCount(1, 1, 1),  0,  "PositiveQuadroEquation1");
-    AssertEqual(GetDistinctRealRootCount(1, -1, 1), 0,  "PositiveQuadroEquation2");
-    AssertEqual(GetDistinctRealRootCount(1, 0, 1),  0,  "PositiveQuadroEquation3");
+void Test3() {
+    Person person;
+    string answer1, answer2 = "Polina with unknown last name";
 
-    AssertEqual(GetDistinctRealRootCount(-1, -1, -1), 0, "NegativeQuadroEquation1");
-    AssertEqual(GetDistinctRealRootCount(-1, 1, -1),  0, "NegativeQuadroEquation2");
-    AssertEqual(GetDistinctRealRootCount(-1, 0, -1),  0, "NegativeQuadroEquation3");
+    person.ChangeFirstName(1965, "Polina");
+    answer1 = person.GetFullName(1965);
+
+    AssertEqual(answer1, answer2, "Test3");
 }
 
-void OneExistingRoot() {
-    AssertEqual(GetDistinctRealRootCount(1, 0, 0),  1, "OneExistingRoot1");
-    AssertEqual(GetDistinctRealRootCount(-1, 0, 0), 1, "OneExistingRoot2");
+void Test4() {
+    Person person;
+    string answer1, answer2 = "Polina with unknown first name";
+
+    person.ChangeLastName(1965, "Polina");
+    answer1 = person.GetFullName(1965);
+
+    AssertEqual(answer1, answer2, "Test4");
 }
 
-void StandardQuadro() {
-    AssertEqual(GetDistinctRealRootCount(1, 1, -1),  2, "StandardQuadro1");
-    AssertEqual(GetDistinctRealRootCount(1, 0, -1),  2, "StandardQuadro2");
-    AssertEqual(GetDistinctRealRootCount(-1, -1, 1), 2, "StandardQuadro3");
-    AssertEqual(GetDistinctRealRootCount(-1, 0, 1),  2, "StandardQuadro4");
+void Test5() {
+    Person person;
+    string answer1 = "",
+        answer2 = "Incognito Name1 with unknown last name Name1 Name2";
 
-    AssertEqual(GetDistinctRealRootCount(1, -1, 0),  2, "StandardQuadro5");
-    AssertEqual(GetDistinctRealRootCount(-1, 1, 0),  2, "StandardQuadro6");
-    AssertEqual(GetDistinctRealRootCount(-1, -1, 0), 2, "StandardQuadro7");
-    AssertEqual(GetDistinctRealRootCount(1, 1, 0),   2, "StandardQuadro8");
+    answer1 += person.GetFullName(1965) + " ";
+
+    person.ChangeFirstName(1965, "Name1");
+    answer1 += person.GetFullName(1965) + " ";
+
+    person.ChangeLastName(1966, "Name2");
+    answer1 += person.GetFullName(1966);
+
+    AssertEqual(answer1, answer2, "Test5");
 }
 
 void TestAll() {
     TestRunner tr;
-    tr.RunTest(OnlyThirdCoef, "OnlyThirdCoef");
-    tr.RunTest(LinearEquation, "LinearEquation");
-    tr.RunTest(NotIntersectedParabola, "NotIntersectedParabola");
-    tr.RunTest(OneExistingRoot, "OneExistingRoot");
-    tr.RunTest(StandardQuadro, "StandardQuadro");
+    tr.RunTest(Test1, "Test1");
+    tr.RunTest(Test2, "Test2");
+    tr.RunTest(Test3, "Test3");
+    tr.RunTest(Test4, "Test4");
+    tr.RunTest(Test5, "Test5");
 }
 
 int main() {

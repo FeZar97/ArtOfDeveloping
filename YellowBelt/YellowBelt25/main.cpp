@@ -95,51 +95,67 @@ private:
     int fail_count = 0;
 };
 
-// int GetDistinctRealRootCount(double a, double b, double c);
+/*
+bool IsPalindrom(const string& str) {
+}
+*/
 
-void OnlyThirdCoef() {
-    AssertEqual(GetDistinctRealRootCount(0, 0, 1),  0, "OnlyThirdCoef1");
-    AssertEqual(GetDistinctRealRootCount(0, 0, -1), 0, "OnlyThirdCoef2");
+/*
+ѕри этом учитывайте, что правильна€ реализаци€ функции:
+    * считает пустую строку палиндромом;
+    * считает строку из одного символа палиндромом;
+    * осуществл€ет обычное сравнение символов на равенство, не игнориру€ никакие символы, в том числе пробельные.
+
+ѕримеры ошибок:
+    * игнорируетс€ первый или последний символ;
+    * сравнение соответствующих символов завершаетс€ не в середине строки, а раньше;
+    * игнорируютс€ пробелы
+*/
+
+void Test1() {
+    AssertEqual(IsPalindrom(""), 1, "Test1");
 }
 
-void LinearEquation() {
-    AssertEqual(GetDistinctRealRootCount(0, 1, 1), 1, "LinearEquation");
+void Test2() {
+    AssertEqual(IsPalindrom("1"), 1, "Test2");
 }
 
-void NotIntersectedParabola() {
-    AssertEqual(GetDistinctRealRootCount(1, 1, 1),  0,  "PositiveQuadroEquation1");
-    AssertEqual(GetDistinctRealRootCount(1, -1, 1), 0,  "PositiveQuadroEquation2");
-    AssertEqual(GetDistinctRealRootCount(1, 0, 1),  0,  "PositiveQuadroEquation3");
+void Test3() {
+    AssertEqual(IsPalindrom("12"), 0, "Test3-1");
+    AssertEqual(IsPalindrom("11"), 1, "Test3-2");
+    AssertEqual(IsPalindrom("111"), 1, "Test3-3");
 
-    AssertEqual(GetDistinctRealRootCount(-1, -1, -1), 0, "NegativeQuadroEquation1");
-    AssertEqual(GetDistinctRealRootCount(-1, 1, -1),  0, "NegativeQuadroEquation2");
-    AssertEqual(GetDistinctRealRootCount(-1, 0, -1),  0, "NegativeQuadroEquation3");
+    AssertEqual(IsPalindrom("madam"), 1, "Test3-4");
+    AssertEqual(IsPalindrom("level"), 1, "Test3-5");
+    AssertEqual(IsPalindrom("wasitacaroracatisaw"), 1, "Test3-6");
+
+    AssertEqual(IsPalindrom("madaam"), 0, "Test3-7");
+    AssertEqual(IsPalindrom(" level "), 1, "Test3-8");
+    AssertEqual(IsPalindrom("  wasitacaroracatisaw  "), 1, "Test3-9");
+
+    AssertEqual(IsPalindrom("      "), 1, "Test3-10");
+
+    AssertEqual(IsPalindrom(".  ."), 1, "Test3-11");
 }
 
-void OneExistingRoot() {
-    AssertEqual(GetDistinctRealRootCount(1, 0, 0),  1, "OneExistingRoot1");
-    AssertEqual(GetDistinctRealRootCount(-1, 0, 0), 1, "OneExistingRoot2");
+void Test4() {
+    AssertEqual(IsPalindrom("1121"), 0, "Test4-1");
+    AssertEqual(IsPalindrom("1211"), 0, "Test4-2");
+    AssertEqual(IsPalindrom(" 11"), 0, "Test4-3");
 }
 
-void StandardQuadro() {
-    AssertEqual(GetDistinctRealRootCount(1, 1, -1),  2, "StandardQuadro1");
-    AssertEqual(GetDistinctRealRootCount(1, 0, -1),  2, "StandardQuadro2");
-    AssertEqual(GetDistinctRealRootCount(-1, -1, 1), 2, "StandardQuadro3");
-    AssertEqual(GetDistinctRealRootCount(-1, 0, 1),  2, "StandardQuadro4");
-
-    AssertEqual(GetDistinctRealRootCount(1, -1, 0),  2, "StandardQuadro5");
-    AssertEqual(GetDistinctRealRootCount(-1, 1, 0),  2, "StandardQuadro6");
-    AssertEqual(GetDistinctRealRootCount(-1, -1, 0), 2, "StandardQuadro7");
-    AssertEqual(GetDistinctRealRootCount(1, 1, 0),   2, "StandardQuadro8");
+void Test5() {
+    AssertEqual(IsPalindrom("1234321"), 1, "Test5-1");
+    AssertEqual(IsPalindrom("123421"), 0, "Test5-2");
 }
 
 void TestAll() {
     TestRunner tr;
-    tr.RunTest(OnlyThirdCoef, "OnlyThirdCoef");
-    tr.RunTest(LinearEquation, "LinearEquation");
-    tr.RunTest(NotIntersectedParabola, "NotIntersectedParabola");
-    tr.RunTest(OneExistingRoot, "OneExistingRoot");
-    tr.RunTest(StandardQuadro, "StandardQuadro");
+    tr.RunTest(Test1, "Test1");
+    tr.RunTest(Test2, "Test2");
+    tr.RunTest(Test3, "Test3");
+    tr.RunTest(Test4, "Test4");
+    tr.RunTest(Test5, "Test5");
 }
 
 int main() {
