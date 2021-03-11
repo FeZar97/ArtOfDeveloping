@@ -10,9 +10,21 @@ set<int>::const_iterator FindNearestElement(const set<int>& numbers, int border)
 
     auto equalRange = numbers.equal_range(border);
 
-    // empty case and case, when exist only 1 item
+    if (numbers.empty()) {
+        return end(numbers);
+    }
+
+    // case when exist only 1 item and when exist prev elem
     if (equalRange.first == equalRange.second) {
-        return prev(end(numbers));
+
+        // when exist prev elem need compare
+        if (equalRange.second != begin(numbers) && distance(equalRange.first, equalRange.second) > 0) {
+            // return nearest
+            if (abs(*(prev(equalRange.second)) - border) < abs(*(prev(equalRange.second)) - border)) {
+                return prev(equalRange.second);
+            }
+        }
+        return equalRange.second;
     }
 
     // if exist only lower elem
@@ -20,8 +32,7 @@ set<int>::const_iterator FindNearestElement(const set<int>& numbers, int border)
         return equalRange.first;
     }
 
-    // if exist both elements
-
+// if exist both elements
     // if first is nearest
     if ( (abs(*equalRange.first) - abs(border)) <= (abs(*equalRange.second) - abs(border)) ) {
         return equalRange.first;
