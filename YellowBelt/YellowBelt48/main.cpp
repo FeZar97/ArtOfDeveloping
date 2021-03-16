@@ -8,38 +8,71 @@ using namespace std;
 
 set<int>::const_iterator FindNearestElement(const set<int>& numbers, int border) {
 
-    auto equalRange = numbers.equal_range(border);
+    /*
+    auto lowerBound = numbers.lower_bound(border);
+    auto upperBound = numbers.upper_bound(border);
+
+    int numbersLength = distance(numbers.begin(), numbers.end());
+
+    auto prevEl = upperBound;
+    if (upperBound != numbers.begin()) {
+        prevEl = prev(upperBound);
+    }
 
     if (numbers.empty()) {
-        return end(numbers);
+        return numbers.end();
     }
 
     // case when exist only 1 item and when exist prev elem
-    if (equalRange.first == equalRange.second) {
+    if (lowerBound == upperBound) {
 
         // when exist prev elem need compare
-        if (equalRange.second != begin(numbers) && distance(equalRange.first, equalRange.second) > 0) {
+        if (upperBound != numbers.begin() && upperBound != numbers.end() && distance(lowerBound, upperBound) == 0) {
             // return nearest
-            if (abs(*(prev(equalRange.second)) - border) < abs(*(prev(equalRange.second)) - border)) {
-                return prev(equalRange.second);
+            if (abs((abs(*prevEl)) - abs(border)) <= abs(abs(*upperBound) - abs(border))) {
+                return prevEl;
+            }
+            else {
+                return upperBound;
             }
         }
-        return equalRange.second;
+
+        if (numbersLength && upperBound == numbers.end()) {
+            return prevEl;
+        }
+        else {
+            return upperBound;
+        }
     }
 
     // if exist only lower elem
-    if (equalRange.second == end(numbers)) {
-        return equalRange.first;
+    if (upperBound == numbers.end()) {
+        return lowerBound;
     }
 
 // if exist both elements
     // if first is nearest
-    if ( (abs(*equalRange.first) - abs(border)) <= (abs(*equalRange.second) - abs(border)) ) {
-        return equalRange.first;
+    if ( abs(abs(*lowerBound) - abs(border)) <= abs(abs(*upperBound) - abs(border)) ) {
+        return lowerBound;
     }
     else {
-        return equalRange.second;
+        return upperBound;
     }
+    */
+
+    auto first_not_less = numbers.lower_bound(border);
+
+    if (first_not_less == numbers.begin()) {
+        return first_not_less;
+    }
+
+    auto last_less = prev(first_not_less);
+    if (first_not_less == numbers.end()) {
+        return last_less;
+    }
+
+    bool is_left = (border - *last_less <= *first_not_less - border);
+    return is_left ? last_less : first_not_less;
 }
 
 int main() {
