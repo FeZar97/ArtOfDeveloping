@@ -6,98 +6,26 @@
 
 using namespace std;
 
-
+// first part
+/*
 template <typename RandomIt>
 pair<RandomIt, RandomIt> FindStartsWith(RandomIt range_begin, RandomIt range_end, char prefix) {
 
-    int rangeLength;
-    pair<RandomIt, RandomIt> curPair{ range_begin, range_end };
-    pair<RandomIt, RandomIt> resPair{ curPair };
+    string curSym;
+    curSym.push_back(prefix);
 
-    vector<string> inputList; // temp
+    auto startIt = std::lower_bound(range_begin, range_end, curSym, [](const string& sym, const string& curSym) {
+        return sym < curSym;
+    });
 
-    /*
-    if (rangeLength == 1) {
-        if ((*range_begin)[0] < prefix) {
-            return { range_end , range_end };
-        }
-        else {
-            return { range_begin , range_end };
-        }
-    }
-    */
+    curSym.clear();
+    curSym.push_back(++prefix);
 
-    do {
-        resPair = curPair;
+    auto endtIt = std::lower_bound(range_begin, range_end, curSym, [](const string& sym, const string& curSym) {
+        return sym < curSym;
+    });
 
-        // ---- temp -----
-        inputList.clear();
-        for (auto ptr = resPair.first; ptr != resPair.second; ptr++) {
-            inputList.push_back(*ptr);
-        }
-        // ---- temp -----
-
-        rangeLength = distance(curPair.first, curPair.second);
-
-        if (rangeLength == 0) {
-            return curPair;
-        }
-
-        // correct left board
-        if ((*(curPair.first))[0] < prefix) {
-            curPair.first += rangeLength / 2;
-        }
-        
-        // correct right board
-        if (rangeLength < 2) {
-            rangeLength = 2;
-        }
-        if ((*(curPair.second - rangeLength / 2))[0] > prefix) {
-            curPair.second -= rangeLength / 2;
-        }
-    } while (curPair != resPair && 
-            curPair.second > curPair.first);
-
-
-    if (distance(curPair.first, curPair.second) == 0) {
-        return { curPair.first , curPair.first };
-    }
-
-    return { curPair.first , curPair.second };
-
-    /*
-    pair<bool, bool> areBordersEqualPrefix{false, false};
-    while ( (!areBordersEqualPrefix.first || !areBordersEqualPrefix.second) &&
-            range_begin != range_end &&
-            rangeLength > 1) {
-
-        rangeLength = distance(range_begin, range_end);
-
-        int curShift = rangeLength / 2;
-
-        // correct left board
-        if( (*(range_begin + curShift))[0] < prefix ) {
-            range_begin += curShift;
-        }
-        else if( (*(range_begin + curShift))[0] == prefix ) {
-            areBordersEqualPrefix.first = true;
-        }
-
-        // correct right board
-        if ((*(range_end - curShift))[0] > prefix) {
-            range_end -= curShift;
-        }
-        else if ((*(range_end - curShift))[0] == prefix) {
-            areBordersEqualPrefix.second = true;
-        }
-    }
-
-    if (distance(range_begin, range_end) == 0) {
-        return { range_begin , range_begin };
-    }
-
-    return { range_begin , range_end };
-    */
+    return std::make_pair(startIt, endtIt);
 }
 
 void autoTests() {
@@ -137,6 +65,87 @@ void autoTests() {
     for (int testIdx = 0; testIdx < autoTests.size(); testIdx++) {
         vector<string> vecStr = autoTests[testIdx].first;
         vector<pair<char, pair<int, int>>> subtests = autoTests[testIdx].second;
+
+        cout << "Test #" << testIdx + 1 << "/" << autoTests.size() << endl;
+
+        for (int subtestIdx = 0; subtestIdx < subtests.size(); subtestIdx++) {
+
+            cout << "\tSubtest #" << subtestIdx + 1 << "/" << subtests.size() << ": ";
+
+            auto resultIters = FindStartsWith(begin(vecStr), end(vecStr), subtests[subtestIdx].first);
+            pair<int, int> resultPair = { resultIters.first - begin(vecStr), resultIters.second - begin(vecStr) },
+                           answer = subtests[subtestIdx].second;
+
+            if (resultPair != answer) {
+                cout << "error (" <<
+                    "result: (" << resultPair.first << "," << resultPair.second << "), " <<
+                    "answer: (" << answer.first << "," << answer.second << ")";
+            }
+            else {
+                cout << "correct";
+            }
+            cout << endl;
+        }
+    }
+}
+*/
+
+// second part
+template <typename RandomIt>
+pair<RandomIt, RandomIt> FindStartsWith(RandomIt range_begin, RandomIt range_end, string prefix) {
+
+    string curSym = prefix;
+    auto startIt = std::lower_bound(range_begin, range_end, curSym, [](const string& sym, const string& curSym) {
+        return sym < curSym;
+    });
+
+    curSym.clear();
+    curSym = prefix;
+
+    curSym[curSym.length() - 1] = curSym[curSym.length() - 1] + 1;
+
+    auto endtIt = std::lower_bound(range_begin, range_end, curSym, [](const string& sym, const string& curSym) {
+        return sym < curSym;
+    });
+
+    return std::make_pair(startIt, endtIt);
+}
+
+void autoTests() {
+
+    vector<pair<vector<string>, vector<pair<string, pair<int, int>>>>> autoTests = { // vector
+
+        // TEST #0
+        { // pair
+            { "moscow", "saint-petersburg", "samara", "vitebsk", "vladimir", "vologda", "vorkuta", "voronezh" }, // vector
+            { // vector (subtets)
+                {"abc", {0,0}}, // pair
+                {"bac", {0,0}},
+                {"mos", {0,1}},
+                {"moscow", {0,1}},
+                {"n", {1,1}},
+                {"o", {1,1}},
+                {"p", {1,1}},
+                {"s", {1,3}},
+                {"t", {3,3}},
+                {"v", {3,8}},
+                {"z", {8,8}}
+            }
+        },
+
+        // TEST #1
+        {
+            { "moscow", "motovilikha", "murmansk" },
+            {
+                {"mt", {2,2}},
+                {"na", {3,3}}
+            }
+        }
+    };
+
+    for (int testIdx = 0; testIdx < autoTests.size(); testIdx++) {
+        vector<string> vecStr = autoTests[testIdx].first;
+        vector<pair<string, pair<int, int>>> subtests = autoTests[testIdx].second;
 
         cout << "Test #" << testIdx + 1 << "/" << autoTests.size() << endl;
 
