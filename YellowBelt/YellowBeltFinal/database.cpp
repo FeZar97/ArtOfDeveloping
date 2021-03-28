@@ -11,9 +11,10 @@ ostream& operator<<(ostream& out, const DbPair& dbPair) {
 void Database::Add(const Date& date, const string& event) {
 	set<string> &curEvents = dbSet[date];
 
-	if (curEvents.count(event) == 0) {
+	auto insertResult = curEvents.insert(event);
+
+	if (insertResult.second) {
 		dates.insert(date);
-		dbSet[date].insert(event);
 		dbVec[date].push_back(event);
 	}
 }
@@ -76,6 +77,20 @@ vector<DbPair> Database::FindIf(function<bool(const Date& date_, const string& e
 		const Date& curDate = dbPair.first;
 		const vector<string>& events = dbPair.second;
 
+		for (const string& curEvent : events) {
+			if (functor(curDate, curEvent)) {
+				result.push_back({ curDate, curEvent });
+			}
+		}
+
+		/*
+		copy_if(events.begin(), events.end(), back_inserter(result), [&](const string& event__) {
+			return functor(curDate, event__);
+		});
+		*/
+
+
+		/*
 		vector<string> tempVector;
 		tempVector.assign(events.begin(), events.end());
 
@@ -87,6 +102,7 @@ vector<DbPair> Database::FindIf(function<bool(const Date& date_, const string& e
 		for (auto it = tempVector.begin(); it != endIter; it++) {
 			result.push_back({ curDate, *it });
 		}
+		*/
 	}
 	return result;
 }
@@ -95,7 +111,8 @@ DbPair Database::Last(const Date& date) const {
 
 	auto greaterElemIter = dates.upper_bound(date);
 
-	if (greaterElemIter == dates.begin() || distance(dates.begin(), dates.end()) == 0) {
+	// if (greaterElemIter == dates.begin() || distance(dates.begin(), dates.end()) == 0) {
+	if (greaterElemIter == dates.begin() || dates.empty()) {
 		throw invalid_argument("Exception case");
 	}
 	else {
