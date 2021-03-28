@@ -3,6 +3,12 @@
 Date::Date(int y, int m, int d): year(y), month(m), day(d) {
 }
 
+Date::Date(const Date& otherDate) {
+	year = otherDate.year;
+	month = otherDate.month;
+	day = otherDate.day;
+}
+
 int Date::GetYear() const {
     return year;
 }
@@ -58,7 +64,19 @@ bool operator==(const Date& lhs, const Date& rhs) {
 	return false;
 }
 
-Date ParseDate(istringstream& is) {
+ostream& operator<<(ostream& out, const Date& date) {
+
+	if (date.GetYear() >= 0) {
+		out.fill('0');
+		out << setw(4) << date.GetYear() << "-"
+			<< setw(2) << date.GetMonth() << "-"
+			<< setw(2) << date.GetDay();
+	}
+
+	return out;
+}
+
+Date ParseDate(istream& is) {
 
 	string error_message = "", inputString;
 	int _year, _month, _day;

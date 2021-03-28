@@ -1,17 +1,13 @@
 #include "node.h"
 
-bool Node::Evaluate(const Date& date, const string& event) {
-	return false;
-}
-
-bool EmptyNode::Evaluate(const Date& date, const string& event) {
-	return false;
+bool EmptyNode::Evaluate(const Date& date, const string& event) const {
+	return true;
 }
 
 DateComparisonNode::DateComparisonNode(const Comparison& cmp_, const Date& date_) : cmp(cmp_), date(date_) {
 }
 
-bool DateComparisonNode::Evaluate(const Date& date, const string& event) {
+bool DateComparisonNode::Evaluate(const Date& date, const string& event) const {
 	switch (cmp) {
 		case Comparison::Less:
 			return date < this->date;
@@ -26,14 +22,14 @@ bool DateComparisonNode::Evaluate(const Date& date, const string& event) {
 		case Comparison::NotEqual:
 			return !(date == this->date);
 		default:
-			return false;
+			return true;
 	}
 }
 
 EventComparisonNode::EventComparisonNode(const Comparison& cmp_, const string& event_): cmp(cmp_), event(event_) {
 }
 
-bool EventComparisonNode::Evaluate(const Date& date, const string& event) {
+bool EventComparisonNode::Evaluate(const Date& date, const string& event) const {
 	switch (cmp) {
 	case Comparison::Less:
 		return event < this->event;
@@ -48,7 +44,7 @@ bool EventComparisonNode::Evaluate(const Date& date, const string& event) {
 	case Comparison::NotEqual:
 		return event != this->event;
 	default:
-		return false;
+		return true;
 	}
 }
 
@@ -56,13 +52,13 @@ LogicalOperationNode::LogicalOperationNode(const LogicalOperation& op_, shared_p
 	op(op_), leftOp(leftOp_), rightOp(rightOp_) {
 }
 
-bool LogicalOperationNode::Evaluate(const Date& date, const string& event) {
+bool LogicalOperationNode::Evaluate(const Date& date, const string& event) const {
 	switch (op) {
 	case LogicalOperation::Or:
 		return leftOp->Evaluate(date, event) || rightOp->Evaluate(date, event);
 	case LogicalOperation::And:
 		return leftOp->Evaluate(date, event) && rightOp->Evaluate(date, event);
 	default:
-		return false;
+		return true;
 	}
 }

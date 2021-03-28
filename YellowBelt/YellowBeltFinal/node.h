@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "date.h"
 #include "database.h"
 
@@ -20,12 +22,12 @@ enum class LogicalOperation {
 
 class Node {
 public:
-	virtual bool Evaluate(const Date& date, const string& event);
+	virtual bool Evaluate(const Date& date, const string& event) const = 0;
 };
 
 class EmptyNode : public Node {
 public:
-	bool Evaluate(const Date& date, const string& event) override;
+	bool Evaluate(const Date& date, const string& event) const override;
 };
 
 class DateComparisonNode : public Node {
@@ -33,7 +35,7 @@ class DateComparisonNode : public Node {
 	const Date date;
 public:
 	DateComparisonNode(const Comparison& cmp_, const Date& date_);
-	bool Evaluate(const Date& date, const string& event) override;
+	bool Evaluate(const Date& date, const string& event) const override;
 };
 
 class EventComparisonNode : public Node {
@@ -41,7 +43,7 @@ class EventComparisonNode : public Node {
 	const string event;
 public:
 	EventComparisonNode(const Comparison& cmp_, const string& event_);
-	bool Evaluate(const Date& date, const string& event) override;
+	bool Evaluate(const Date& date, const string& event) const override;
 };
 
 class LogicalOperationNode : public Node {
@@ -51,5 +53,5 @@ class LogicalOperationNode : public Node {
 
 public:
 	LogicalOperationNode(const LogicalOperation& op_, shared_ptr<Node> leftOp_, shared_ptr<Node> rightOp_);
-	bool Evaluate(const Date& date, const string& event) override;
+	bool Evaluate(const Date& date, const string& event) const override;
 };

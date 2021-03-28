@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 
@@ -12,12 +13,16 @@ class Date {
 
 public:
 	Date(int y = 0, int m = 1, int d = 1);
+	Date(const Date& otherDate);
 	int GetYear() const;
 	int GetMonth() const;
 	int GetDay() const;
+
 	friend bool operator<(const Date& lhs, const Date& rhs);
 	friend bool operator>(const Date& lhs, const Date& rhs);
 	friend bool operator==(const Date& lhs, const Date& rhs);
 };
 
-Date ParseDate(istringstream& is);
+ostream& operator<< (ostream& out, const Date& date);
+
+Date ParseDate(istream& is);

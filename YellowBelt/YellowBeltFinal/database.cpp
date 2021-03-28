@@ -1,73 +1,105 @@
 #include "database.h"
 
+ostream& operator<<(ostream& out, const DbPair& dbPair) {
+	if (dbPair.first.GetYear() >= 0) {
+		out << dbPair.first << " " << dbPair.second;
+	}
+
+	return out;
+}
+
 void Database::Add(const Date& date, const string& event) {
-	vector<string> curEvents = db[date];
-	if (find(curEvents.begin(), curEvents.end(), event) == curEvents.end()) {
-		db[date].push_back(event);
+	set<string> &curEvents = dbSet[date];
+
+	if (curEvents.count(event) == 0) {
+		dates.insert(date);
+		dbSet[date].insert(event);
+		dbVec[date].push_back(event);
 	}
 }
 
 void Database::Print(ostream& os) const {
-	for (auto &record : db) {
+	for (const pair<Date, vector<string>>&record : dbVec) {
 		for (auto &event : record.second) {
-			if (record.first.GetYear() >= 0) {
-				os.fill('0');
-				os << setw(4) << record.first.GetYear() << "-"
-					<< setw(2) << record.first.GetMonth() << "-"
-					<< setw(2) << record.first.GetDay() << " "
-					<< event << endl;
+			os << DbPair{record.first, event} << endl;
+		}
+	}
+}
+
+int Database::RemoveIf(function<bool(const Date& date_, const string& event_)> functor) {
+
+	int removedElementsNb = 0;
+	vector<Date> datesToDelete;
+
+	for (pair<const Date, vector<string>> &dbPair: dbVec) {
+
+		const Date& curDate = dbPair.first;
+		vector<string>& events = dbPair.second;
+
+		auto startIterToRemove = stable_partition(events.begin(), events.end(), 
+			[&](const string& event__) {
+				return !functor(curDate, event__);
+			});
+
+		removedElementsNb += distance(startIterToRemove, events.end());
+
+		// if in result vector is empty - remove it from map
+		if (startIterToRemove == events.begin()) {
+			datesToDelete.push_back(curDate);
+		}
+		else {
+			// remove from set
+			// dbSet[curDate] = { events.begin(), events.end() };
+			for (auto it = startIterToRemove; it != events.end(); it++) {
+				dbSet[curDate].erase(*it);
 			}
-		}
-	}
-}
 
-int Database::RemoveIf(bool* functor(const Date& date, const string& event)) {
-
-	for (auto &dbPair : db) {
-		auto& curDate = dbPair.first;
-		if (functor(curDate, "")) {
-
+			// remove from vector
+			events.erase(startIterToRemove, events.end());
 		}
 	}
 
+	for (const Date& removedDate : datesToDelete) {
+		dates.erase(removedDate);
+		dbVec.erase(removedDate);
+		dbSet.erase(removedDate);
+	}
 
-
-
-	return 0;
+	return removedElementsNb;
 }
 
-vector<string> Database::FindIf(bool* func()) {
-	return vector<string>();
+vector<DbPair> Database::FindIf(function<bool(const Date& date_, const string& event_)> functor) const {
+	vector<DbPair> result;
+
+	for (const pair<const Date, vector<string>>& dbPair : dbVec) {
+
+		const Date& curDate = dbPair.first;
+		const vector<string>& events = dbPair.second;
+
+		vector<string> tempVector;
+		tempVector.assign(events.begin(), events.end());
+
+		auto endIter = stable_partition(tempVector.begin(), tempVector.end(),
+			[&](const string& event__) {
+				return functor(curDate, event__);
+			});
+
+		for (auto it = tempVector.begin(); it != endIter; it++) {
+			result.push_back({ curDate, *it });
+		}
+	}
+	return result;
 }
 
-string Database::Last(const Date& date) {
-	return string();
-}
+DbPair Database::Last(const Date& date) const {
 
-bool Database::DeleteEvent(const Date& date, const string& event) {
-	if (db.count(date)) {
-		// return db.at(date).erase(event);
-		return true;
+	auto greaterElemIter = dates.upper_bound(date);
+
+	if (greaterElemIter == dates.begin() || distance(dates.begin(), dates.end()) == 0) {
+		throw invalid_argument("Exception case");
 	}
 	else {
-		return false;
-	}
-}
-
-int Database::DeleteDate(const Date& date) {
-	int size = 0;
-	if (db.count(date)) {
-		size = db.at(date).size();
-		db.erase(date);
-	}
-	return size;
-}
-
-vector<string> Database::Find(const Date& date) const {
-	if (db.count(date)) {
-		return db.at(date);
-	}
-	else {
-		return {};
+		Date lastDate = *(--greaterElemIter);
+		return { lastDate, *(--dbVec.at(lastDate).end()) };
 	}
 }

@@ -8,16 +8,18 @@
 #include "node.h"
 #include "test_runner.h"
 
+// #include "test_db.h"
+
 using namespace std;
 
 string ParseEvent(istream& is) {
     string result;
     getline(is, result);
 
-    auto delimeter = partition(begin(result), end(result), [result](const char& sym) {
-        return sym == ' ';
+    auto delimeter = find_if(begin(result), end(result), [result](const char& sym) {
+        return sym != ' ';
     });
-    begin(result) = delimeter;
+    result.erase(result.begin(), delimeter);
 
     return result;
 }
@@ -103,4 +105,18 @@ void TestAll() {
     TestRunner tr;
     tr.RunTest(TestParseEvent, "TestParseEvent");
     tr.RunTest(TestParseCondition, "TestParseCondition");
+
+    /*
+    tr.RunTest(TestEmptyNode, "TestEmptyNode");
+    tr.RunTest(TestDbAdd, "TestDbAdd");
+    tr.RunTest(TestDbFind, "TestDbFind");
+    tr.RunTest(TestDbLast, "TestDbLast");
+    tr.RunTest(TestDbRemoveIf, "TestDbRemoveIf");
+    tr.RunTest(TestInsertionOrder, "TestInsertionOrder");
+    tr.RunTest(TestsMyCustom, "TestsMyCustom");
+    tr.RunTest(TestDatabase, "TestDatabase");
+    tr.RunTest(TestDbFind2, "TestDbFind2");
+
+    tr.RunTest(HardTestLast, "HardTestLast");
+    */
 }
