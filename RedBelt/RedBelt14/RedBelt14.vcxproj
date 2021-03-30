@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4ac6ab1c-1dd0-42d0-9dfa-26408a4fc4d7}</ProjectGuid>
-    <RootNamespace>RedBelt12</RootNamespace>
+    <ProjectGuid>{29414a43-1c00-46ac-9158-b915acc8473b}</ProjectGuid>
+    <RootNamespace>RedBelt14</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,10 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClInclude Include="..\test_runner.h" />
+    <ClInclude Include="airline_ticket.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test_runner.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
