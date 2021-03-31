@@ -1,6 +1,7 @@
 #include <vector>
+#include <stdexcept>
 
-#include "../test_runner.h"
+// #include "../test_runner.h"
 
 using namespace std;
 
@@ -9,34 +10,44 @@ class Deque {
 	vector<T> forwardVec;
 	vector<T> backwardVec;
 
+	T& getElem(size_t index) {
+		if (index < forwardVec.size()) {
+			return forwardVec[forwardVec.size() - 1 - index];
+		}
+		else if (index < Size()) {
+			return backwardVec[index - forwardVec.size()];
+		}
+		throw out_of_range("");
+	}
+
+	const T& getElemC(size_t index) const {
+		if (index < forwardVec.size()) {
+			return forwardVec[forwardVec.size() - 1 - index];
+		}
+		else if (index < Size()) {
+			return backwardVec[index - forwardVec.size()];
+		}
+		throw out_of_range("");
+	}
+
 public:
 	Deque() {};
-
-	bool Empty() const {
-		return forwardVec.empty() && backwardVec.empty();
-	}
 
 	size_t Size() const {
 		return forwardVec.size() + backwardVec.size();
 	}
 
+	bool Empty() const {
+		return (Size() == 0);
+	}
+
 	// operator []
 	T& operator[](size_t index) {
-		if (index < forwardVec.size()) {
-			return forwardVec[index];
-		}
-		else if (index < Size()) {
-			return backwardVec[Size() - index - 1];
-		}
+		return getElem(index);
 	}
 
 	const T& operator[](size_t index) const {
-		if (index < forwardVec.size()) {
-			return forwardVec[index];
-		}
-		else if (index < Size()) {
-			return backwardVec[Size() - index - 1];
-		}
+		return getElemC(index);
 	}
 
 	// AT
@@ -44,62 +55,32 @@ public:
 		if (index < 0 || index >= Size()) {
 			throw out_of_range("");
 		}
-		if (index < forwardVec.size()) {
-			return forwardVec[forwardVec.size() - 1 - index];
-		}
-		else if (index < Size()) {
-			return backwardVec[Size() - index - 1];
-		}
+		return getElem(index);
 	}
 
 	const T& At(size_t index) const {
 		if (index < 0 || index >= Size()) {
 			throw out_of_range("");
 		}
-		if (index < forwardVec.size()) {
-			return forwardVec[index];
-		}
-		else if (index < Size()) {
-			return backwardVec[Size() - index - 1];
-		}
+		return getElemC(index);
 	}
 
 	// FRONT
 	T& Front() {
-		if (!forwardVec.empty()) {
-			return forwardVec[0];
-		}
-		if (!backwardVec.empty()) {
-			return backwardVec[backwardVec.size() - 1];
-		}
+		return getElem(0);
 	}
 
 	const T& Front() const {
-		if (!forwardVec.empty()) {
-			return forwardVec[0];
-		}
-		if (!backwardVec.empty()) {
-			return backwardVec[backwardVec.size() - 1];
-		}
+		return getElemC(0);
 	}
 
 	// BACK
 	T& Back() {
-		if (!backwardVec.empty()) {
-			return backwardVec[0];
-		}
-		if (!forwardVec.empty()) {
-			return forwardVec[forwardVec.size() - 1];
-		}
+		return getElem(Size() - 1);
 	}
 
 	const T& Back() const {
-		if (!backwardVec.empty()) {
-			return backwardVec[0];
-		}
-		if (!forwardVec.empty()) {
-			return forwardVec[forwardVec.size() - 1];
-		}
+		return getElemC(Size() - 1);
 	}
 
 	void PushFront(const T& elem) {
@@ -111,6 +92,7 @@ public:
 	}
 };
 
+/*
 void TestDeque() {
 	Deque<int> deq;
 
@@ -131,6 +113,11 @@ void TestDeque() {
 
 	deq[2] = 7;
 	ASSERT_EQUAL(deq.Back(), 7);
+
+	deq.PushBack(11);
+	int lastIdx = deq.Size() - 1;
+	int lastElem = deq[lastIdx];
+	ASSERT_EQUAL(lastElem, 11);
 }
 
 int main() {
@@ -138,3 +125,4 @@ int main() {
 	RUN_TEST(tr, TestDeque);
 	return 0;
 }
+*/
