@@ -27,6 +27,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt22", "RedBelt22\RedB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt23", "RedBelt23\RedBelt23.vcxproj", "{35D78A7A-8FD4-4267-89B4-A981E8559473}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{829E1B16-B334-4FB2-B46A-26FC3D568E76}"
+	ProjectSection(SolutionItems) = preProject
+		test_runner.h = test_runner.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

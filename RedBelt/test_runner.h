@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "test_runner.h"
+
 using namespace std;
 
 template <class T>
