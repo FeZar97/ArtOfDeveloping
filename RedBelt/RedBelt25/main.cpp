@@ -58,11 +58,40 @@ public:
     }
 };
 
+class HotelClientsManager {
+
+    // <clientId, [reservations>>
+    map<int64_t, set<int64_t>> clientsReservations;
+
+public:
+    HotelClientsManager() {};
+
+    void addReservation(int64_t clientId, int64_t reservationTime) {
+        clientsReservations[clientId].insert(reservationTime);
+    }
+
+    void removeReservation(int64_t clientId, int64_t reservationTime) {
+        clientsReservations[clientId].erase(reservationTime);
+
+        if (clientsReservations[clientId].empty()) {
+            clientsReservations.erase(clientId);
+        }
+    }
+
+    int getUniqClientsNb() const {
+        return clientsReservations.size();
+    }
+
+    bool operator<(const HotelClientsManager& hotelClientsManager) const {
+        return true;
+    }
+};
+
 class HotelManager {
     deque<RoomBooking> reservs;
-    map<string, uint64_t> hotelRoomsReserves;
-    // _clients[hotel_name][client_id] += room_count;
-    // _rooms[hotel_name] += room_count;
+
+    map<string, HotelClientsManager> clients;
+    map<string, unsigned int> rooms;
 
     auto dequeBinarySearchPos(const deque<RoomBooking> &reservs, const RoomBooking& elem) {
         auto beginIt = reservs.begin(),
@@ -87,6 +116,28 @@ class HotelManager {
     void removeOldReserves(deque<RoomBooking> &reserves, const RoomBooking& elem) {
         RoomBooking removeThreshold(elem.getResrveTime() - 86400, "", 0, 0);
         auto thresholdIt = dequeBinarySearchPos(reserves, removeThreshold);
+
+        string removedHotel;
+        int64_t removedClient;
+        int64_t removedTime;
+        unsigned int removedRoomsCount;
+
+        for (auto reserveIt = reserves.begin(); reserveIt != thresholdIt; reserveIt++) {
+            removedHotel = (*reserveIt).getHotelName();
+            removedClient = (*reserveIt).getClientId();
+            removedTime = (*reserveIt).getResrveTime();
+            removedRoomsCount = (*reserveIt).getRoomCount();
+
+            // remove client
+            clients[removedHotel].removeReservation(removedClient, removedTime);
+
+            // remove rooms
+            rooms[removedHotel] -= removedRoomsCount;
+            if (rooms[removedHotel] == 0) {
+                rooms.erase(removedHotel);
+            }
+        }
+
         reserves.erase(reserves.begin(), thresholdIt);
     }
 
@@ -100,6 +151,9 @@ public:
     void addReserve(int64_t reserveTime_, const string& hotelName_, int64_t clientId_, int roomCount_) {
         RoomBooking rb(reserveTime_, hotelName_, clientId_, roomCount_);
 
+        clients[hotelName_].addReservation(clientId_, reserveTime_);
+        rooms[hotelName_] += roomCount_;
+
         // insert into reservs
         if (!reservs.empty()) {
             auto bestInsertIt = dequeBinarySearchPos(reservs, rb);
@@ -112,31 +166,17 @@ public:
     }
 
     int getClients(const string& hotelName) const {
-        if (hotelReserves.count(hotelName) == 0) {
+        if (clients.count(hotelName) == 0) {
             return 0;
         }
-
-        const deque<RoomBooking> &curHotelReserves = hotelReserves.at(hotelName);
-        set<int64_t> uniqClients;
-
-        for (auto curIt = curHotelReserves.begin(); curIt != curHotelReserves.end(); curIt++) {
-            uniqClients.insert((*curIt).getClientId());
-        }
-        return uniqClients.size();
+        return clients.at(hotelName).getUniqClientsNb();
     }
 
     int getRooms(const string& hotelName) const {
-        if (hotelReserves.count(hotelName) == 0) {
+        if (rooms.count(hotelName) == 0) {
             return 0;
         }
-
-        const deque<RoomBooking> &curHotelReserves = hotelReserves.at(hotelName);
-        int roomsCnt = 0;
-
-        for (auto curIt = curHotelReserves.begin(); curIt != curHotelReserves.end(); curIt++) {
-            roomsCnt += (*curIt).getRoomCount();
-        }
-        return roomsCnt;
+        return rooms.at(hotelName);
     }
 };
 
@@ -278,6 +318,8 @@ void AllTests() {
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
+    // AllTests();
 
     HotelManager manager;
 
