@@ -1,7 +1,7 @@
 #include <vector>
 using namespace std;
 
-#include "../test_runner.h"
+// #include "../test_runner.h"
 
 template <typename T>
 class LinkedList {
@@ -16,44 +16,29 @@ private:
 
 public:
     ~LinkedList() {
-        while (head->next) {
-            RemoveAfter(head);
+        while (head) {
+            PopFront();
         }
     }
     
     void PushFront(const T& value) {
-    
-        if (head) {
-            Node* newHead = new Node;
-            newHead->value = value;
-            newHead->next = head;
-            head = newHead;
-        }
-        else {
-            head = new Node;
-            head->value = value;
-            head->next = nullptr;
-        }
+        Node* newHead = new Node;
+        newHead->value = value;
+        newHead->next = head;
+
+        head = newHead;
     }
     
     void InsertAfter(Node* node, const T& value) {
 
-        Node* nodeToInsert = head;
-        if (!nodeToInsert) {
+        if (!node) {
             PushFront(value);
         }
         else {
-            do {
-                if (nodeToInsert == node) {
-                    break;
-                }
-                nodeToInsert = nodeToInsert->next;
-            } while (nodeToInsert);
-
             Node* newNode = new Node;
             newNode->value = value;
-            newNode->next = nodeToInsert->next;
-            nodeToInsert->next = newNode;
+            newNode->next = node->next;
+            node->next = newNode;
         }
     }
 
@@ -62,35 +47,22 @@ public:
             PopFront();
         }
         else {
-
-            Node* nodeToRemoveAfter = head,
-                  prevNode;
-            do {
-                if (nodeToRemoveAfter == node) {
-                    break;
-                }
-                nodeToRemoveAfter = nodeToRemoveAfter->next;
-            } while (nodeToRemoveAfter);
-
-            Node* nodeToRemove = nodeToRemoveAfter->next;
+            Node* nodeToRemove = node->next;
+            // if exist node to remove
             if (nodeToRemove) {
-                Node* nextAfterRemoved = nodeToRemove->next;
+                node->next = nodeToRemove->next;
                 delete nodeToRemove;
                 nodeToRemove = nullptr;
-                nodeToRemoveAfter->next = nextAfterRemoved;
             }
         }
     }
 
     void PopFront() {
         if (head) {
-            Node* curHead = head;
-            if (head->next) {
-                head = head->next;
-            }
-
-            delete curHead;
-            curHead = nullptr;
+            Node* prevHead = head;
+            head = head->next;
+            delete prevHead;
+            prevHead = nullptr;
         }
     }
 
@@ -101,6 +73,8 @@ public:
       return head;
   }
 };
+
+/*
 
 template <typename T>
 vector<T> ToVector(const LinkedList<T>& list) {
@@ -184,3 +158,4 @@ int main() {
     RUN_TEST(tr, TestPopFront);
     return 0;
 }
+*/
