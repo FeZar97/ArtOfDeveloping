@@ -9,20 +9,16 @@
 
 using namespace std;
 
-// TAirport should be enum with sequential items and last item TAirport::Last_
 template <typename TAirport>
 class AirportCounter {
+
+    array<size_t, static_cast<uint32_t>(TAirport::Last_)> items;
+
 public:
-    // конструктор по умолчанию: список элементов пока пуст
     AirportCounter() {
-        items = array<Item, static_cast<uint32_t>(TAirport::Last_)>();
-        for (uint32_t i = 0; i < static_cast<uint32_t>(TAirport::Last_); i++) {
-            items[i].first = static_cast<TAirport>(i);
-            items[i].second = 0;
-        }
+        items.fill(0);
     }
     
-    // конструктор от диапазона элементов типа TAirport
     template <typename TIterator>
     AirportCounter(TIterator begin, TIterator end): AirportCounter() {
         for (auto it = begin; it != end; it++) {
@@ -30,42 +26,36 @@ public:
         }
     }
     
-    // получить количество элементов, равных данному
     size_t Get(TAirport airport) const {
-        return (*(items.data() + static_cast<uint32_t>(airport))).second;
+        return items[static_cast<uint32_t>(airport)];
     }
     
-    // добавить данный элемент
     void Insert(TAirport airport) {
-        (*(items.data() + static_cast<uint32_t>(airport))).second++;
+        items[static_cast<uint32_t>(airport)]++;
     }
     
-    // удалить одно вхождение данного элемента
     void EraseOne(TAirport airport) {
         if (Get(airport) > 0) {
-            (*(items.data() + static_cast<uint32_t>(airport))).second--;
+            items[static_cast<uint32_t>(airport)]--;
         }
     }
     
-    // удалить все вхождения данного элемента
     void EraseAll(TAirport airport) {
-        if (Get(airport) > 0) {
-            (*(items.data() + static_cast<uint32_t>(airport))).second = 0;
-        }
+        items[static_cast<uint32_t>(airport)] = 0;
     }
     
     using Item = pair<TAirport, size_t>;
-    using Items = &array<Item, static_cast<uint32_t>(TAirport::Last_)>;
+    using Items = array<Item, static_cast<uint32_t>(TAirport::Last_)>;
     
-    // получить некоторый объект, по которому можно проитерироваться,
-    // получив набор объектов типа Item - пар (аэропорт, количество),
-    // упорядоченных по аэропорту
     Items GetItems() const {
-        return &items;
+        Items newItems;
+
+        for (int i = 0; i < static_cast<uint32_t>(TAirport::Last_); i++) {
+            newItems[i] = { static_cast<TAirport>(i), items[i] };
+        }
+
+        return newItems;
     }
-    
-private:
-    array<Item, static_cast<uint32_t>(TAirport::Last_)> items;
 };
 
 void TestMoscow() {
@@ -232,10 +222,21 @@ int main() {
     
     // Кроме того, не забудьте включить оптимизации при компиляции кода.
     
-    LOG_DURATION("Total tests duration");
-    RUN_TEST(tr, TestMoscow);
-    RUN_TEST(tr, TestManyConstructions);
-    RUN_TEST(tr, TestManyGetItems);
-    RUN_TEST(tr, TestMostPopularAirport);
+    {
+        LOG_DURATION("TestMoscow");
+        RUN_TEST(tr, TestMoscow);
+    }
+    {
+        LOG_DURATION("TestManyConstructions");
+        RUN_TEST(tr, TestManyConstructions);
+    }
+    {
+        LOG_DURATION("TestManyGetItems");
+        RUN_TEST(tr, TestManyGetItems);
+    }
+    {
+        LOG_DURATION("TestMostPopularAirport");
+        RUN_TEST(tr, TestMostPopularAirport);
+    }
     return 0;
 }
