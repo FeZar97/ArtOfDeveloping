@@ -31,42 +31,37 @@ void MakeJosephusPermutation(RandomIt first, RandomIt last, uint32_t step_size) 
         resultElemOrder.push_back(move(*(*curIterPos)));
 
         // shift curIterPos
-        uint32_t curStepNb = 0,
-                 nextStepSize = step_size % curRangeLength;
-
-        // shift curIterPos on 1, because now it point on self
-        if (nextStepSize == 0) {
-            nextStepSize = 1;
+        uint32_t curStepNb = 1;
+        if (curIterPos == prev(prevItersOrder.end())) {
+            curIterPos = prevItersOrder.begin();
         }
-
-        while (curStepNb < nextStepSize) {
-
-            // uint32_t distanceToEnd = distance(curIterPos, prevItersOrder.end());
-            uint32_t distanceToEnd = 1;
-            uint32_t availableShift = min(distanceToEnd, nextStepSize - curStepNb);
-
-            advance(curIterPos, availableShift);
-            curStepNb += availableShift;
-
-            // check, that curIterPos not point to end()
-            if (curIterPos == prevItersOrder.end()) {
-                curIterPos = prevItersOrder.begin();
-            }
+        else {
+            advance(curIterPos, 1);
         }
 
         // remove previous iter
         prevItersOrder.erase(iterToRemove);
         curRangeLength--;
+
+        while (curStepNb < step_size) {
+
+            curStepNb++;
+
+            // check, that curIterPos not point to end()
+            if (curIterPos == prev(prevItersOrder.end())) {
+                curIterPos = prevItersOrder.begin();
+                continue;
+            }
+
+            advance(curIterPos, 1);
+        }
     }
 
     // now size of prevItersOrder == 1, need move last value from prevItersOrder into back of resultElemOrder
     resultElemOrder.push_back(move(*(prevItersOrder.back())));
 
     // return values to home
-    auto sourceIt = resultElemOrder.begin();
-    for (RandomIt destIt = first; destIt != last; destIt++) {
-        *destIt = move(*sourceIt++);
-    }
+    move(resultElemOrder.begin(), resultElemOrder.end(), first);
 }
 
 vector<int> MakeTestVector() {
@@ -134,17 +129,39 @@ void TestAvoidsCopying() {
     ASSERT_EQUAL(numbers, expected);
 }
 
-void TestMeaning() {
+void TestStep1() {
+    vector<char> chars{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
+    MakeJosephusPermutation(begin(chars), end(chars), 1);
+    ASSERT_EQUAL(chars, vector<char>({ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' }));
+}
+
+void TestStep2() {
+    vector<char> chars{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
+    MakeJosephusPermutation(begin(chars), end(chars), 2);
+    ASSERT_EQUAL(chars, vector<char>({ 'a', 'c', 'e', 'g', 'i', 'k', 'b', 'f', 'j', 'd', 'l', 'h' }));
+}
+
+void TestStep3() {
     vector<char> chars{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
     MakeJosephusPermutation(begin(chars), end(chars), 3);
-
     ASSERT_EQUAL(chars, vector<char>({ 'a', 'd', 'g', 'j', 'b', 'f', 'k', 'e', 'l', 'i', 'c', 'h' }));
+}
+
+void TestStep4() {
+    vector<char> chars{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l' };
+    MakeJosephusPermutation(begin(chars), end(chars), 4);
+    ASSERT_EQUAL(chars, vector<char>({ 'a', 'e', 'i', 'b', 'g', 'l', 'h', 'd', 'c', 'f', 'k', 'j' }));
 }
 
 int main() {
     TestRunner tr;
     RUN_TEST(tr, TestIntVector);
     RUN_TEST(tr, TestAvoidsCopying);
-    RUN_TEST(tr, TestMeaning);
+    
+    RUN_TEST(tr, TestStep1);
+    RUN_TEST(tr, TestStep2);
+    RUN_TEST(tr, TestStep3);
+    RUN_TEST(tr, TestStep4);
+
     return 0;
 }
