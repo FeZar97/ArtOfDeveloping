@@ -68,6 +68,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt55", "RedBelt55\RedB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt56", "RedBelt56\RedBelt56.vcxproj", "{CD8B737E-9AAD-4787-9F68-E542E827C0CE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt57", "RedBelt57\RedBelt57.vcxproj", "{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -316,6 +318,14 @@ Global
 		{CD8B737E-9AAD-4787-9F68-E542E827C0CE}.Release|x64.Build.0 = Release|x64
 		{CD8B737E-9AAD-4787-9F68-E542E827C0CE}.Release|x86.ActiveCfg = Release|Win32
 		{CD8B737E-9AAD-4787-9F68-E542E827C0CE}.Release|x86.Build.0 = Release|Win32
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Debug|x64.ActiveCfg = Debug|x64
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Debug|x64.Build.0 = Debug|x64
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Debug|x86.ActiveCfg = Debug|Win32
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Debug|x86.Build.0 = Debug|Win32
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Release|x64.ActiveCfg = Release|x64
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Release|x64.Build.0 = Release|x64
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Release|x86.ActiveCfg = Release|Win32
+		{BBFF2C0C-48C7-4977-BD35-308FD2A16FAD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
