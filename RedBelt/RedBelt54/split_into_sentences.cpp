@@ -7,22 +7,26 @@ using namespace std;
 template <typename Token>
 using Sentence = vector<Token>;
 
-// Класс Token имеет метод bool IsEndSentencePunctuation() const
 template <typename Token>
 vector<Sentence<Token>> SplitIntoSentences(vector<Token> tokens) {
     vector<Sentence<Token>> result;
+    Sentence<Token> curSentence;
 
     int curTokenIdx = 0;
-    while (true) {
+    bool isEnd = false, isPrevEnd = false;
 
-        Sentence<Token> curSentence;
+    while (curTokenIdx < tokens.size()) {
 
-        curSentence.push_back(move(tokens[curTokenIdx++]));
+        isPrevEnd = isEnd;
+        isEnd = tokens[curTokenIdx].IsEndSentencePunctuation();
 
-        // if its end of Sentence
-        if (curSentence.back().IsEndSentencePunctuation()) {
+        if (!isEnd && isPrevEnd) {
+            result.push_back(move(curSentence));
         }
+        curSentence.push_back(move(tokens[curTokenIdx++]));
+    }
 
+    if (curSentence.size()) {
         result.push_back(move(curSentence));
     }
 
@@ -48,32 +52,38 @@ ostream& operator<<(ostream& stream, const TestToken& token) {
 // Тест содержит копирования объектов класса TestToken.
 // Для проверки отсутствия копирований в функции SplitIntoSentences
 // необходимо написать отдельный тест.
-void TestSplitting() {
-  ASSERT_EQUAL(
-    SplitIntoSentences(vector<TestToken>({{"Split"}, {"into"}, {"sentences"}, {"!"}})),
-    vector<Sentence<TestToken>>({
-        {{"Split"}, {"into"}, {"sentences"}, {"!"}}
-    })
-  );
+void Test1() {
+    ASSERT_EQUAL(
+        SplitIntoSentences(vector<TestToken>({ {"Split"}, {"into"}, {"sentences"}, {"!"} })),
+        vector<Sentence<TestToken>>({
+            {{"Split"}, {"into"}, {"sentences"}, {"!"}}
+            })
+    );
+}
 
-  ASSERT_EQUAL(
-    SplitIntoSentences(vector<TestToken>({{"Split"}, {"into"}, {"sentences"}, {"!", true}})),
-    vector<Sentence<TestToken>>({
-        {{"Split"}, {"into"}, {"sentences"}, {"!", true}}
-    })
-  );
+void Test2() {
+    ASSERT_EQUAL(
+        SplitIntoSentences(vector<TestToken>({ {"Split"}, {"into"}, {"sentences"}, {"!", true} })),
+        vector<Sentence<TestToken>>({
+            {{"Split"}, {"into"}, {"sentences"}, {"!", true}}
+            })
+    );
+}
 
-  ASSERT_EQUAL(
-    SplitIntoSentences(vector<TestToken>({{"Split"}, {"into"}, {"sentences"}, {"!", true}, {"!", true}, {"Without"}, {"copies"}, {".", true}})),
-    vector<Sentence<TestToken>>({
-        {{"Split"}, {"into"}, {"sentences"}, {"!", true}, {"!", true}},
-        {{"Without"}, {"copies"}, {".", true}},
-    })
-  );
+void Test3() {
+    ASSERT_EQUAL(
+      SplitIntoSentences(vector<TestToken>({{"Split"}, {"into"}, {"sentences"}, {"!", true}, {"!", true}, {"Without"}, {"copies"}, {".", true}})),
+      vector<Sentence<TestToken>>({
+          {{"Split"}, {"into"}, {"sentences"}, {"!", true}, {"!", true}},
+          {{"Without"}, {"copies"}, {".", true}},
+      })
+    );
 }
 
 int main() {
   TestRunner tr;
-  RUN_TEST(tr, TestSplitting);
+  RUN_TEST(tr, Test1);
+  RUN_TEST(tr, Test2);
+  RUN_TEST(tr, Test3);
   return 0;
 }
