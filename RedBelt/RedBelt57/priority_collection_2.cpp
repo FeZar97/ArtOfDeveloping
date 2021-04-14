@@ -21,7 +21,7 @@ public:
     // Добавить объект с нулевым приоритетом
     // с помощью перемещения и вернуть его идентификатор
     Id Add(T object) {
-        objects[0].push_back({ objectsCounter, move(object)});
+        objects[0].push_back({ move(object), objectsCounter });
         idToPriorityMap[objectsCounter] = 0;
         return objectsCounter++;
     }
@@ -33,9 +33,9 @@ public:
     void Add(ObjInputIt range_begin, ObjInputIt range_end,
         IdOutputIt ids_begin) {
 
-        uint64_t objectsCnt = 0;
-        for (auto it = range_begin, it != range_end; it++) {
-            *(ids_begin + objectsCnt++) = Add(*it);
+        for (auto it = range_begin; it != range_end; it++) {
+            *ids_begin = Add(move(*it));
+            ids_begin++;
         }
     }
     
@@ -47,10 +47,10 @@ public:
     
     // Получить объект по идентификатору
     const T& Get(Id id) const {
-        Priority objPriority = idToPriorityMap[id];
-        for (auto& obj : objects[objPriority]) {
-            if (obj.first == id) {
-                return obj;
+        const Priority &objPriority = idToPriorityMap.at(id);
+        for (const PriorityObject<T> &obj : objects.at(objPriority)) {
+            if (obj.second == id) {
+                return obj.first;
             }
         }
     }
@@ -64,7 +64,7 @@ public:
 
         // find object to promote
         for (auto iter = objects[objPriority].begin(); iter != objects[objPriority].end(); iter++) {
-            if ((*iter).first == id) {
+            if ((*iter).second == id) {
                 iterToPromote = iter;
                 break;
             }
@@ -73,33 +73,72 @@ public:
         // move to next priority
         objects[nextPriority].push_back(move(*iterToPromote));
 
+        // remove prev
+        objects[objPriority].erase(iterToPromote);
+
+
         // save changes in helpers-data
         idToPriorityMap[id] = nextPriority;
 
         // check that prev priority exist
+        // if not - remove key
         if (objects[objPriority].empty()) {
             objects.erase(objPriority);
+        }
+
+        if (nextPriority > maxPriority) {
+            maxPriority = nextPriority;
         }
     }
     
     // Получить объект с максимальным приоритетом и его приоритет
-    pair<const T&, int> GetMax() const;
+    pair<const T&, int> GetMax() const {
+        return { objects.at(maxPriority).back().first, maxPriority };
+    }
     
     // Аналогично GetMax, но удаляет элемент из контейнера
-    pair<T, int> PopMax();
+    pair<T, int> PopMax() {
+
+        // find iter with max Id
+        auto maxIter = objects[maxPriority].begin();
+        for (auto iter = objects[maxPriority].begin(); iter != objects[maxPriority].end(); iter++) {
+            if ((*iter).second > (*maxIter).second) {
+                maxIter = iter;
+            }
+        }
+
+        pair<T, int> result = make_pair<T, int>(move((*maxIter).first), static_cast<int>(maxPriority));
+
+        // remove from idToPriority map
+        idToPriorityMap.erase((*maxIter).second);
+
+        // remove maxIter
+        objects[maxPriority].erase(maxIter);
+
+        if (objects[maxPriority].empty()) {
+            objects.erase(maxPriority);
+        }
+
+        maxPriority = 0;
+        if (objects.size()) {
+            maxPriority = (*prev(objects.end())).first;
+        }
+
+        return result;
+    }
 
 private:
-    using Priority = uint64_t;
+    using Priority = int;
 
-    template <typename T>
-    using PriorityObject = pair<Id, T>;
+    template <typename SomeType>
+    using PriorityObject = pair<SomeType, Id>;
 
+    Priority maxPriority{ 0 };
     map<Priority, list<PriorityObject<T>>> objects;
     map<Id, Priority> idToPriorityMap;
 
-    static uint64_t objectsCounter{ 0 };
+    uint64_t objectsCounter{ 0 };
 };
-
 
 class StringNonCopyable : public string {
 public:
@@ -110,7 +149,7 @@ public:
     StringNonCopyable& operator=(StringNonCopyable&&) = default;
 };
 
-void TestNoCopy() {
+void TestNoCopy1() {
     PriorityCollection<StringNonCopyable> strings;
     const auto white_id = strings.Add("white");
     const auto yellow_id = strings.Add("yellow");
@@ -126,20 +165,68 @@ void TestNoCopy() {
         ASSERT_EQUAL(item.first, "red");
         ASSERT_EQUAL(item.second, 2);
     }
-    {
-        const auto item = strings.PopMax();
-        ASSERT_EQUAL(item.first, "yellow");
-        ASSERT_EQUAL(item.second, 2);
+}
+
+void TestNoCopy2() {
+    PriorityCollection<StringNonCopyable> strings;
+    const auto white_id = strings.Add("white");
+    const auto yellow_id = strings.Add("yellow");
+    const auto red_id = strings.Add("red");
+
+    strings.Promote(yellow_id);
+    for (int i = 0; i < 2; ++i) {
+        strings.Promote(red_id);
     }
-    {
-        const auto item = strings.PopMax();
-        ASSERT_EQUAL(item.first, "white");
-        ASSERT_EQUAL(item.second, 0);
+    strings.Promote(yellow_id);
+
+    strings.PopMax();
+
+    const auto item = strings.PopMax();
+    ASSERT_EQUAL(item.first, "yellow");
+    ASSERT_EQUAL(item.second, 2);
+}
+
+void TestNoCopy3() {
+    PriorityCollection<StringNonCopyable> strings;
+    const auto white_id = strings.Add("white");
+    const auto yellow_id = strings.Add("yellow");
+    const auto red_id = strings.Add("red");
+
+    strings.Promote(yellow_id);
+    for (int i = 0; i < 2; ++i) {
+        strings.Promote(red_id);
     }
+    strings.Promote(yellow_id);
+
+    strings.PopMax();
+    strings.PopMax();
+
+    const auto item = strings.PopMax();
+    ASSERT_EQUAL(item.first, "white");
+    ASSERT_EQUAL(item.second, 0);
+}
+
+void TestNoCopy4() {
+    PriorityCollection<StringNonCopyable> strings;
+
+    vector<StringNonCopyable> testVector;
+    testVector.push_back("white");
+    testVector.push_back("yellow");
+    testVector.push_back("red");
+
+    vector<PriorityCollection<StringNonCopyable>::Id> resultId(3),
+        expected{0, 1 ,2};
+
+    strings.Add(testVector.begin(), testVector.end(), resultId.begin());
+
+    ASSERT_EQUAL(resultId, expected);
 }
 
 int main() {
     TestRunner tr;
-    RUN_TEST(tr, TestNoCopy);
+    RUN_TEST(tr, TestNoCopy1);
+    RUN_TEST(tr, TestNoCopy2);
+    RUN_TEST(tr, TestNoCopy3);
+    RUN_TEST(tr, TestNoCopy4);
     return 0;
 }
