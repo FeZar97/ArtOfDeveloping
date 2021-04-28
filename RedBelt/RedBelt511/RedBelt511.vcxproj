@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b3cf2631-3fee-47f8-bfa9-9839b762a918}</ProjectGuid>
+    <ProjectGuid>{ffd599e3-5655-485b-ab1b-588e2becb2f4}</ProjectGuid>
     <RootNamespace>RedBelt511</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>RedBelt511_part1</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -117,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,14 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\RedBelt511_part1\iterator_range.h" />
-    <ClInclude Include="..\RedBelt511_part1\parse.h" />
-    <ClInclude Include="..\RedBelt511_part1\search_server.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\RedBelt511_part1\main.cpp" />
-    <ClCompile Include="..\RedBelt511_part1\parse.cpp" />
-    <ClCompile Include="..\RedBelt511_part1\search_server.cpp" />
+    <ClCompile Include="concurrent_map.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

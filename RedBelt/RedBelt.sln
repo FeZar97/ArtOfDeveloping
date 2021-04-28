@@ -78,6 +78,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt510", "RedBelt510\Re
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBeltFinal1", "RedBeltFinal1\RedBeltFinal1.vcxproj", "{F85853C1-8D3F-4EE7-92E2-E74F0FC85F45}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBelt511", "RedBelt511\RedBelt511.vcxproj", "{FFD599E3-5655-485B-AB1B-588E2BECB2F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -366,6 +368,14 @@ Global
 		{F85853C1-8D3F-4EE7-92E2-E74F0FC85F45}.Release|x64.Build.0 = Release|x64
 		{F85853C1-8D3F-4EE7-92E2-E74F0FC85F45}.Release|x86.ActiveCfg = Release|Win32
 		{F85853C1-8D3F-4EE7-92E2-E74F0FC85F45}.Release|x86.Build.0 = Release|Win32
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Debug|x64.ActiveCfg = Debug|x64
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Debug|x64.Build.0 = Debug|x64
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Debug|x86.ActiveCfg = Debug|Win32
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Debug|x86.Build.0 = Debug|Win32
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Release|x64.ActiveCfg = Release|x64
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Release|x64.Build.0 = Release|x64
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Release|x86.ActiveCfg = Release|Win32
+		{FFD599E3-5655-485B-AB1B-588E2BECB2F4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

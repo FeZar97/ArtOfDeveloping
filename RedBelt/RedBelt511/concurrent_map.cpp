@@ -26,8 +26,8 @@ public:
     static_assert(is_integral_v<K>, "ConcurrentMap supports only integer keys");
     
     struct Access {
-        V& ref_to_value;
         lock_guard<mutex> guard;
+        V& ref_to_value;
     };
     
     explicit ConcurrentMap(size_t bucket_count): concurrentMap(bucket_count) {
@@ -35,24 +35,30 @@ public:
     
     Access operator[](const K& key) {
 
-        for (const auto& bucket : concurrentMap) {
-            const auto& pairVec = bucket.first;
-            for (const auto& somePair : pairVec) {
-                if (somePair.first == key) {
-                    return { somePair.second, lock_guard(bucket.second)};
+        for (syncBucket &_syncBucket : concurrentMap) {
+            pairBucket &_pairBucket = _syncBucket.first;
+            for (pair<K, V> &_pair : _pairBucket) {
+                if (_pair.first == key) {
+                    // Access res;
+                    return {lock_guard(_syncBucket.second), _pair.second};
                 }
             }
         }
-        concurrentMap[bucketToInsertIdx % concurrentMap.size()].first.push_back({ key , V()});
-        return concurrentMap[bucketToInsertIdx++ % concurrentMap.size()].first.back();
+
+        size_t newBucketIdx = bucketToInsertIdx % concurrentMap.size();
+        bucketToInsertIdx++;
+
+        concurrentMap[newBucketIdx].first.push_back({ key , V()});
+        return {lock_guard(concurrentMap[newBucketIdx].second),
+                concurrentMap[newBucketIdx].first.back().second};
     }
     
     map<K, V> BuildOrdinaryMap() {
         map<K, V> result;
-        for (const auto& bucket : concurrentMap) {
-            const auto& pairVec = bucket.first;
-            for (const auto& somePair : pairVec) {
-                result[somePair.first] = somePair.second;
+        for (const syncBucket &_syncBucket : concurrentMap) {
+            const pairBucket &_pairBucket = _syncBucket.first;
+            for (const pair<K, V> &_pair : _pairBucket) {
+                result[_pair.first] = _pair.second;
             }
         }
 
